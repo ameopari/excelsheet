@@ -1,0 +1,1 @@
+ALTER TABLE events MODIFY seo_friendly_url varchar(255) null;
