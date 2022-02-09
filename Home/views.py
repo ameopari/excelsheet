@@ -7,8 +7,13 @@ from rest_framework import generics, permissions
 from rest_framework.response import Response
 from knox.models import AuthToken
 from .serializers import UserSerializer, RegisterSerializer
+import requests
+
+
+# 5d76484b2174474faf08f1ae7d46a533
 
 # Register API
+
 class RegisterAPI(generics.GenericAPIView):
     serializer_class = RegisterSerializer
 
@@ -36,6 +41,33 @@ class LoginAPI(KnoxLoginView):
         user = serializer.validated_data['user']
         login(request, user)
         return super(LoginAPI, self).post(request, format=None)
+
+
+from django.shortcuts import render
+from newsapi import NewsApiClient
+  
+# Create your views here. 
+def sports(request):
+      
+    newsapi = NewsApiClient(api_key ='5d76484b2174474faf08f1ae7d46a533')
+    print('newsapi====',newsapi)
+    top = newsapi.get_top_headlines(sources ='techcrunch')
+    
+  
+    l = top['articles']
+    print('l==',len(l))
+    desc =[]
+    news =[]
+    img =[]
+  
+    for i in range(len(l)):
+        f = l[i]
+        news.append(f['title'])
+        desc.append(f['description'])
+        img.append(f['urlToImage'])
+    mylist = zip(news, desc, img)
+  
+    return render(request, 'sports.html', context ={"mylist":mylist})
 
 
 
